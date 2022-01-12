@@ -1,0 +1,78 @@
+# FROM python:3.8.5
+# FROM kumatea/tensorflow:2.6.0
+FROM fbcotter/docker-tensorflow-opencv
+
+# RUN set -ex \
+#         \
+#         && cp /etc/apt/sources.list /etc/apt/sources.list.bak \
+#         && sed -i 's@http://deb.debian.org/debian@https://mirrors.matrix.moe/debian@g' /etc/apt/sources.list \
+#         && sed -i 's@http://security.debian.org/debian-security@https://mirrors.matrix.moe/debian-security@g' /etc/apt/sources.list \
+#         && apt-get update \
+#         && apt-get install -y python3-opencv \
+#         && apt-get install -y bash ca-certificates libffi-dev libssl-dev xz-utils zlib1g-dev liblzma-dev \
+#         && rm -rf /var/lib/apt/lists/* \
+#         && mv /etc/apt/sources.list.bak /etc/apt/sources.list \
+#         && pip config set global.index-url https://mirrors.matrix.moe/pypi/web/simple \
+#         && python3 -m pip install -U pip setuptools wheel \
+#         && rm -rf /root/.cache/* \
+#         && rm -rf /root/.config/pip
+
+# RUN set -ex \
+#         \
+#         && pip config set global.index-url https://mirrors.matrix.moe/pypi/web/simple \
+#         && python3 -m pip install -U tensorflow -f https://tf.kmtea.eu/whl/stable.html -f https://ext.kmtea.eu/whl/stable.html \
+#         && rm -rf /root/.cache/* \
+#         && rm -rf /root/.config/pip
+
+# Install production dependencies.
+ADD requirements.txt ./requirements.txt
+# RUN apt-get update \
+#                && apt-get install -y \
+#                               python3 \
+#                               python3-pip \
+#                               build-essential \
+#                               python3-dev \
+#                               zlib1g-dev \
+#                               libjpeg-dev \
+#                               wget 
+# RUN apt-get install ffmpeg libsm6 libxext6  -y
+RUN pip install -r requirements.txt
+# RUN pip install --upgrade setuptools
+# RUN pip install -r requirements.txt
+# RUN apt-get update -y
+# RUN apt --fix-broken install python-pycurl python-apt
+# RUN apt-get install -y software-properties-common
+# RUN add-apt-repository python-opencv
+# RUN apt-get install -y python3-opencv
+# RUN pip install --upgrade tf-nightly
+# RUN pip install http://ci.tensorflow.org/view/Nightly/job/nightly-pi-python3/122/artifact/output-artifacts/tensorflow-1.5.0-cp34-none-any.whl
+# RUN pip install --upgrade https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-1.12.0-py3-none-any.whl
+
+
+# Copy local code to the container image.
+WORKDIR usr/src/flask_app
+COPY . .
+
+# ENV PORT 80
+# CMD exec gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 0 main:app
+
+
+# FROM python:3.7.6
+
+# WORKDIR usr/src/flask_app
+# COPY requirements.txt .
+# RUN apt-get update
+# RUN apt-get install ffmpeg libsm6 libxext6  -y
+# RUN pip install --no-cache-dir -r requirements.txt
+# RUN pip install testresources setuptools==49.6.0
+# RUN pip install -U --no-deps numpy==1.19.4 future==0.18.2 mock==3.0.5 keras_preprocessing==1.1.2 keras_applications==1.0.8 gast==0.4.0 protobuf pybind11 cython pkgconfig 
+# RUN apt-get install libhdf5-serial-dev hdf5-tools libhdf5-dev zlib1g-dev zip libjpeg62-turbo-dev liblapack-dev libblas-dev gfortran
+# RUN pip install tensorflow
+# COPY . .
+
+# numpy
+# pandas
+# opencv-python
+# flask==1.1.2
+# pillow==8.0.1
+# gunicorn
