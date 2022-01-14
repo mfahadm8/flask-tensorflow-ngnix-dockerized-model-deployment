@@ -6,7 +6,7 @@ import numpy as np
 # from keras.models import load_model
 # from keras.preprocessing import image
 
-app = Flask(__name__)
+server = Flask(__name__)
 
 labels={0:"blotch",1:"normal",2:"rotten",3:"scab"}
 # Load the TFLite model and allocate tensors
@@ -59,11 +59,11 @@ def predict_label(img_path):
 
 
 # routes
-@app.route("/", methods=['GET', 'POST'])
+@server.route("/", methods=['GET', 'POST'])
 def kuch_bhi():
 	return render_template("home.html")
 
-@app.route("/about")
+@server.route("/about")
 def about_page():
 	return "About You..!!!"
 
@@ -72,7 +72,7 @@ def about_page():
 
 
 
-@app.route("/submit", methods = ['GET', 'POST'])
+@server.route("/submit", methods = ['GET', 'POST'])
 def get_hours():
 	if request.method == 'POST':
 		img = request.files['my_image']
@@ -91,5 +91,5 @@ def get_hours():
 
 
 if __name__ =='__main__':
-	#app.debug = True
-	app.run(debug = True)
+	#server.debug = True
+	server.run(debug = True)
