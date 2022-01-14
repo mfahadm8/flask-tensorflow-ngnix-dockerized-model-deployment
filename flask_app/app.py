@@ -2,13 +2,14 @@ from flask import Flask, render_template, request
 import cv2 
 import tensorflow as tf
 import numpy as np
+from operator import itemgetter
 
 # from keras.models import load_model
 # from keras.preprocessing import image
 
 server = Flask(__name__)
 
-labels={0:"blotch",1:"normal",2:"rotten",3:"scab"}
+labels=["blotch","normal","rotten","scab"]
 # Load the TFLite model and allocate tensors
 interpreter = tf.lite.Interpreter(model_path="84_percent_accuracy.tflite")
 interpreter.allocate_tensors()
@@ -51,7 +52,7 @@ def predict_label(img_path):
 	output_data = interpreter.get_tensor(output_details[0]['index'])
 	minval=min(output_data[0])
 	maxval=max(output_data[0])
-	results=[round((i-minval)/(minval+maxval),2) for i in output_data[0]]
+	results=[round(((i-minval)/(minval+maxval)*100),2) for i in output_data[0]]
 	output_map=[ i for i in zip(labels,results)]
 	# print(round(results[2],2))
 	# print("For file {}, the output is {}".format("file", results))
@@ -81,10 +82,11 @@ def get_hours():
 		img.save(img_path)
 
 		p = predict_label(img_path)
+		# verdict=max(p,key=p.get)
+		verdict=max(p,key=itemgetter(1))
 
 
-
-	return render_template("home.html", prediction = p, img_path = img_path)
+	return render_template("home.html", prediction = p, img_path = img_path,verdict=verdict)
 
 
 

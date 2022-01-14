@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Image Classification</title>
+  <title>Apple Image Classification</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
+
+<style>
+ 
+  </style>
 <body>
 
 <div class="container">
-  <h1 class="jumbotron bg-primary">Image Classfication</h1>
+ 
+  <h1 class="jumbotron bg-primary">Apple Image Classification</h1>
   <br><br>
+
   <form class="form-horizontal" action="/submit" method="post" enctype="multipart/form-data">
 
     <div class="form-group">
@@ -28,21 +34,48 @@
       </div>
     </div>
   </form>
+  {% if verdict %}
+  <div class="media">
+    <span class="media-left">
+      <img  src="{{img_path}}" class="img-thumbnail" height="50px" width="50px">
+    </span>
+    <div class="media-body">
+      <h1 style="color:rgb(63, 62, 62); padding:10px">Verdict : It's {{verdict[0]}} apple with {{verdict[1]}}% probability</h1>
+    </div>
+</div>
+
+  {% endif %}
 
 	{% if prediction %}
+  	<div class="row">
+		<div class="span5">
+    <br/>
+    <br/>
+    <h3>Here are the detailed prediction results..</h3>
+            <table class="table table-striped table-condensed">
+                  <thead>
+                  <tr>
+                      <th>Label</th>
+                      <th>Prediction</th>                                          
+                  </tr>
+              </thead>       
+                <tbody>
+                                          
+           
   {% for label,val in prediction %}
-  <img src="{{img_path}}" height="400px" width="400px">
-	<h2> {{label}}   : <i> {{val}} </i></h2>
+
+	<!-- <h2> {{label}}   : <i> {{val*100}} % </i></h2> -->
+  <tr>
+    <td>{{label}}</td>
+  <td><span class="label label-success"> {{val}}%</span></td>                                       
+</tr>     
   {% endfor %}
+</tbody>
+</table>
+</div>
 	{% endif %}
 
 </div>
-
-
-
-
-
-
 
 </body>
 </html>
